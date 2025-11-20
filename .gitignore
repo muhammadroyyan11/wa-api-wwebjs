@@ -1,0 +1,9 @@
+/node_modules/
+
+/session/
+*.session.json
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
