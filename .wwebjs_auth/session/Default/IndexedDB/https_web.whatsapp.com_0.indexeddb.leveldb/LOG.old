@@ -1,43 +1,41 @@
-2025/11/20-19:12:54.350 4ce4 Reusing MANIFEST E:\1. Kerja\wa-api\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/20-19:12:54.351 4ce4 Recovering log #499
-2025/11/20-19:12:54.565 4ce4 Reusing old log E:\1. Kerja\wa-api\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000499.log 
-2025/11/20-19:12:54.565 4ce4 Delete type=2 #485
-2025/11/20-19:12:54.565 4ce4 Delete type=2 #488
-2025/11/20-19:12:54.565 4ce4 Delete type=2 #489
-2025/11/20-19:12:54.565 4ce4 Delete type=2 #502
-2025/11/20-19:12:55.668 4d08 Compacting 1@1 + 1@2 files
-2025/11/20-19:12:55.941 4d08 Generated table #506@1: 31200 keys, 2111074 bytes
-2025/11/20-19:12:55.941 4d08 Compacted 1@1 + 1@2 files => 2111074 bytes
-2025/11/20-19:12:55.978 4d08 compacted to: files[ 0 0 12 0 0 0 0 ]
-2025/11/20-19:12:55.978 4d08 Delete type=2 #490
-2025/11/20-19:12:55.978 4d08 Delete type=2 #501
-2025/11/20-19:12:56.327 4ce4 Level-0 table #508: started
-2025/11/20-19:12:56.431 4ce4 Level-0 table #508: 591847 bytes OK
-2025/11/20-19:12:56.463 4ce4 Delete type=0 #499
-2025/11/20-19:12:56.465 4ce4 Manual compaction at level-0 from '\x00p\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00q\x00\x00\x00' @ 0 : 0; will stop at '\x00q\x00\x00\x05' @ 1117675 : 1
-2025/11/20-19:12:56.465 4ce4 Compacting 1@0 + 0@1 files
-2025/11/20-19:12:56.532 4ce4 Generated table #509@0: 11518 keys, 101064 bytes
-2025/11/20-19:12:56.634 4ce4 Generated table #510@0: 9189 keys, 254657 bytes
-2025/11/20-19:12:56.634 4ce4 Compacted 1@0 + 0@1 files => 355721 bytes
-2025/11/20-19:12:56.660 4ce4 compacted to: files[ 0 2 12 0 0 0 0 ]
-2025/11/20-19:12:56.660 4ce4 Delete type=2 #508
-2025/11/20-19:12:56.660 4ce4 Manual compaction at level-0 from '\x00q\x00\x00\x05' @ 1117675 : 1 .. '\x00q\x00\x00\x00' @ 0 : 0; will stop at (end)
-2025/11/20-19:12:56.667 1394 Level-0 table #512: started
-2025/11/20-19:12:56.706 1394 Level-0 table #512: 448 bytes OK
-2025/11/20-19:12:56.721 1394 Delete type=0 #507
-2025/11/20-19:12:56.722 1394 Manual compaction at level-0 from '\x00q\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00r\x00\x00\x00' @ 0 : 0; will stop at '\x00q\x00\x00\x05' @ 1117708 : 0
-2025/11/20-19:12:56.722 1394 Compacting 1@0 + 2@1 files
-2025/11/20-19:12:56.794 1394 Generated table #513@0: 11522 keys, 101014 bytes
-2025/11/20-19:12:56.854 1394 Generated table #514@0: 9187 keys, 254637 bytes
-2025/11/20-19:12:56.854 1394 Compacted 1@0 + 2@1 files => 355651 bytes
-2025/11/20-19:12:56.879 1394 compacted to: files[ 0 2 12 0 0 0 0 ]
-2025/11/20-19:12:56.880 1394 Delete type=2 #512
-2025/11/20-19:12:56.880 1394 Manual compaction at level-0 from '\x00q\x00\x00\x05' @ 1117708 : 0 .. '\x00r\x00\x00\x00' @ 0 : 0; will stop at (end)
-2025/11/20-19:12:59.715 1394 Compacting 1@1 + 1@2 files
-2025/11/20-19:13:00.135 1394 Generated table #515@1: 31292 keys, 2115763 bytes
-2025/11/20-19:13:00.135 1394 Compacted 1@1 + 1@2 files => 2115763 bytes
-2025/11/20-19:13:00.161 1394 compacted to: files[ 0 1 12 0 0 0 0 ]
-2025/11/20-19:13:00.162 1394 Delete type=2 #506
-2025/11/20-19:13:00.162 1394 Delete type=2 #509
-2025/11/20-19:13:00.162 1394 Delete type=2 #510
-2025/11/20-19:13:00.162 1394 Delete type=2 #513
+2025/11/25-18:16:32.927 4764 Reusing MANIFEST D:\JEZ\wa-api-wwebjs\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/25-18:16:32.928 4764 Recovering log #1200
+2025/11/25-18:16:33.004 4764 Reusing old log D:\JEZ\wa-api-wwebjs\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/001200.log 
+2025/11/25-18:16:40.140 1a7c Level-0 table #1229: started
+2025/11/25-18:16:40.167 1a7c Level-0 table #1229: 529837 bytes OK
+2025/11/25-18:16:40.170 1a7c Delete type=0 #1200
+2025/11/25-18:16:40.176 1a7c Manual compaction at level-0 from '\x00\x1e\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1f\x00\x00\x00' @ 0 : 0; will stop at '\x00\x1e\x00\x00\x05' @ 4294003 : 1
+2025/11/25-18:16:40.176 1a7c Compacting 1@0 + 1@1 files
+2025/11/25-18:16:40.217 1a7c Generated table #1230@0: 7873 keys, 182057 bytes
+2025/11/25-18:16:40.247 1a7c Generated table #1231@0: 361 keys, 6674 bytes
+2025/11/25-18:16:40.259 1a7c Generated table #1232@0: 458 keys, 11459 bytes
+2025/11/25-18:16:40.259 1a7c Compacted 1@0 + 1@1 files => 200190 bytes
+2025/11/25-18:16:40.261 1a7c compacted to: files[ 0 3 36 0 0 0 0 ]
+2025/11/25-18:16:40.263 1a7c Delete type=2 #1229
+2025/11/25-18:16:40.264 1a7c Manual compaction at level-0 from '\x00\x1e\x00\x00\x05' @ 4294003 : 1 .. '\x00\x1f\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/25-18:16:40.510 1a7c Compacting 1@1 + 10@2 files
+2025/11/25-18:16:40.694 1a7c Generated table #1233@1: 62788 keys, 2235708 bytes
+2025/11/25-18:16:40.750 1a7c Generated table #1234@1: 3021 keys, 2140983 bytes
+2025/11/25-18:16:40.803 1a7c Generated table #1235@1: 1118 keys, 2129330 bytes
+2025/11/25-18:16:41.003 1a7c Generated table #1236@1: 2035 keys, 2143837 bytes
+2025/11/25-18:16:41.156 1a7c Generated table #1237@1: 1856 keys, 2138011 bytes
+2025/11/25-18:16:41.238 1a7c Generated table #1238@1: 2445 keys, 2149898 bytes
+2025/11/25-18:16:41.322 1a7c Generated table #1239@1: 2087 keys, 2139136 bytes
+2025/11/25-18:16:41.390 1a7c Generated table #1240@1: 8197 keys, 2152025 bytes
+2025/11/25-18:16:41.631 1a7c Generated table #1241@1: 32080 keys, 2265743 bytes
+2025/11/25-18:16:41.759 1a7c Generated table #1242@1: 27363 keys, 2233547 bytes
+2025/11/25-18:16:41.768 1a7c Generated table #1243@1: 39 keys, 57978 bytes
+2025/11/25-18:16:41.768 1a7c Compacted 1@1 + 10@2 files => 21786196 bytes
+2025/11/25-18:16:41.771 1a7c compacted to: files[ 0 2 37 0 0 0 0 ]
+2025/11/25-18:16:41.773 1a7c Delete type=2 #1204
+2025/11/25-18:16:41.773 1a7c Delete type=2 #1205
+2025/11/25-18:16:41.773 1a7c Delete type=2 #1206
+2025/11/25-18:16:41.773 1a7c Delete type=2 #1207
+2025/11/25-18:16:41.773 1a7c Delete type=2 #1208
+2025/11/25-18:16:41.773 1a7c Delete type=2 #1209
+2025/11/25-18:16:41.773 1a7c Delete type=2 #1210
+2025/11/25-18:16:41.774 1a7c Delete type=2 #1211
+2025/11/25-18:16:41.774 1a7c Delete type=2 #1212
+2025/11/25-18:16:41.774 1a7c Delete type=2 #1213
+2025/11/25-18:16:41.774 1a7c Delete type=2 #1214
+2025/11/25-18:16:41.774 1a7c Delete type=2 #1230
