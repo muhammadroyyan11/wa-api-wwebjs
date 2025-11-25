@@ -48,6 +48,12 @@ Generate QR berbentuk gambar PNG:
 npm install qrcode
 ```
 
+Install MSQL Connector:
+
+``` bash
+npm install mysql2   
+```
+
 Jalankan server:
 
 ``` bash
