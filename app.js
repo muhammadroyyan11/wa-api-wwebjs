@@ -3,16 +3,13 @@ const qrcode = require('qrcode');
 const qrcodeTerminal = require('qrcode-terminal');
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
 const mysql = require('mysql2/promise');
-const { exec } = require('child_process');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// --- DATABASE ---
+// --- DATABASE CONFIG ---
 const db = mysql.createPool({
     host: "103.245.39.246",
     user: "sneaker_app",
@@ -22,22 +19,24 @@ const db = mysql.createPool({
     connectionLimit: 5
 });
 
+// --- STATE MANAGEMENT ---
+let userState = {}; 
+let lastMenuSent = {}; 
+let latestQR = null;
+let waReady = false;
+
 // --- GLOBAL ERROR HANDLER ---
 process.on('unhandledRejection', (reason) => {
     if (reason && reason.message && reason.message.includes('Execution context was destroyed')) return;
     console.error('Unhandled Rejection:', reason);
 });
 
-// --- STATE MANAGEMENT ---
-let userState = {}; 
-let lastMenuSent = {}; // Untuk mencegah spam menu (cooldown)
-
+// --- FUNCTION: SEND MENU ---
 const sendMenu = async (msg) => {
     const from = msg.from;
     const now = Date.now();
     
-    // Cooldown 1 menit: Jangan kirim menu jika sudah dikirim dalam 60 detik terakhir
-    // kecuali user memang mengetik "menu"
+    // Cooldown 1 menit agar tidak spam menu otomatis
     if (lastMenuSent[from] && (now - lastMenuSent[from] < 60000) && !['menu','help'].includes(msg.body.toLowerCase())) {
         return; 
     }
@@ -52,7 +51,7 @@ _Ketik angka (1, 2, atau 3) untuk memilih._
 _Ketik *Menu* kapan saja untuk kembali ke sini._`;
 
     try {
-        await msg.reply(menuText);
+        await client.sendMessage(from, menuText);
         lastMenuSent[from] = now;
         userState[from] = "IDLE";
     } catch (e) {
@@ -60,32 +59,51 @@ _Ketik *Menu* kapan saja untuk kembali ke sini._`;
     }
 };
 
-let latestQR = null;
-let waReady = false;
-
+// --- WHATSAPP CLIENT INIT ---
 const client = new Client({
-    authStrategy: new LocalAuth(),
+    // LocalAuth menyimpan sesi di folder .wwebjs_auth agar tidak scan ulang
+    authStrategy: new LocalAuth({
+        dataPath: './.wwebjs_auth'
+    }),
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-js/main/dist/wppconnect-wa.js',
+    },
     puppeteer: {
         headless: true,
-        args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+        args: [
+            "--no-sandbox", 
+            "--disable-setuid-sandbox", 
+            "--disable-dev-shm-usage",
+            "--disable-session-crashed-bubble"
+        ]
     }
 });
 
-// --- EVENTS ---
+// --- CLIENT EVENTS ---
 client.on("qr", (qr) => {
     latestQR = qr;
     waReady = false;
+    console.log("QR Code received, please scan:");
     qrcodeTerminal.generate(qr, { small: true });
+});
+
+client.on('authenticated', () => {
+    console.log('✅ Sesi ditemukan! Sedang menyambungkan...');
 });
 
 client.on("ready", () => {
     waReady = true;
-    console.log("WhatsApp Ready!");
+    latestQR = null;
+    console.log("🚀 WhatsApp Ready & Connected!");
 });
 
+client.on('auth_failure', (msg) => {
+    console.error('❌ Sesi gagal dimuat, silakan scan ulang:', msg);
+    waReady = false;
+});
 
-
-// --- LOGIKA PESAN (FIXED) ---
+// --- MESSAGE LOGIC (AUTO RESPONDER) ---
 client.on('message', async (msg) => {
     if (msg.from.endsWith("@g.us") || msg.fromMe) return;
 
@@ -94,10 +112,9 @@ client.on('message', async (msg) => {
         const text = msg.body.trim();
         const lowerText = text.toLowerCase();
         
-        // Simpan state awal jika belum ada
         if (!userState[from]) userState[from] = "IDLE";
 
-        // 1. JIKA SEDANG MENUNGGU NOMOR HP (CEK POIN)
+        // 1. Logic Cek Poin (Waiting Phone)
         if (userState[from] === "WAITING_PHONE") {
             if (lowerText === 'batal' || lowerText === 'menu') {
                 userState[from] = "IDLE";
@@ -122,7 +139,7 @@ client.on('message', async (msg) => {
             return await msg.reply(`*Cek Poin*\n\nNama: ${cust.cust_name}\nPoin: *${cust.cust_point ?? 0}*`);
         }
 
-        // 2. LOGIKA PILIHAN MENU (1, 2, 3)
+        // 2. Logic Pilihan Menu
         if (text === "1") {
             userState[from] = "WAITING_PHONE";
             return await msg.reply("📞 Silakan masukkan nomor HP Anda:");
@@ -133,30 +150,27 @@ client.on('message', async (msg) => {
         } 
         
         if (text === "3") {
-            return await msg.reply("🏬 *JEZ Store*\nBuka: 09:00 - 21:00\nLokasi: Jakarta.");
+            return await msg.reply("🏬 *JEZ Store*\nBuka: 09:00 - 21:00\nLokasi: Cabang Terdekat Anda.");
         }
 
-        // 3. LOGIKA PEMICU MENU
+        // 3. Logic Trigger Menu
         const triggers = ['menu', 'help', 'halo', 'hi', 'start', 'p'];
         if (triggers.includes(lowerText)) {
-            return await Menu(msg);
+            return await sendMenu(msg);
         }
-send
-        // 4. JIKA CHAT RANDOM (Kaya "a", "l", "m")
-        // JANGAN panggil sendMenu(msg) secara otomatis di sini agar tidak spam.
-        // Kita diamkan saja atau beri tahu cara panggil menu.
-        console.log(`Ignored message from ${from}: ${text}`);
 
     } catch (error) {
         if (!error.message.includes('Execution context')) {
-            console.error("Error:", error);
+            console.error("Error in message handler:", error);
         }
     }
 });
 
 client.initialize();
 
-// --- API ---
+// --- REST API ENDPOINTS ---
+
+// 1. Get QR Code for Login
 app.get("/get-qr", async (req, res) => {
     if (waReady) return res.json({ status: false, message: "Connected" });
     if (!latestQR) return res.json({ status: false, message: "Wait QR..." });
@@ -164,6 +178,12 @@ app.get("/get-qr", async (req, res) => {
     res.json({ status: true, qr: qrImage });
 });
 
+// 2. Check Status
+app.get("/wa-status", (req, res) => {
+    res.json({ ready: waReady });
+});
+
+// 3. Send Message (Digunakan oleh Laravel/POSV2)
 app.post("/send-message", async (req, res) => {
     const { phone, message } = req.body;
 
@@ -171,24 +191,37 @@ app.post("/send-message", async (req, res) => {
         return res.status(503).json({ status: false, error: "WhatsApp is Offline" });
     }
 
-    try {
-        let number = phone.replace(/\D/g, "");
+    const trySend = async (retryCount = 0) => {
+        try {
+            let number = phone.replace(/\D/g, "");
+            if (number.startsWith("0")) number = "62" + number.substring(1);
+            const chatId = number + "@c.us";
 
-        if (number.startsWith("0")) {
-            number = "62" + number.substring(1);
+            await client.sendMessage(chatId, message);
+            return { success: true };
+        } catch (e) {
+            // Jika frame lepas/detached, coba lagi sampai 3x
+            if (e.message.includes('detached Frame') && retryCount < 3) {
+                console.log(`[RETRY] Detached frame detected, retrying (${retryCount + 1}/3)...`);
+                await new Promise(r => setTimeout(r, 2000));
+                return trySend(retryCount + 1);
+            }
+            throw e;
         }
+    };
 
-        const chatId = number + "@c.us";
-
-        await client.sendMessage(chatId, message);
-
-        console.log(`Pesan terkirim ke: ${chatId}`);
+    try {
+        await trySend();
+        console.log(`[API] Pesan terkirim ke: ${phone}`);
         res.json({ status: true, message: "Pesan berhasil dikirim!" });
-
     } catch (e) {
-        console.error("Gagal kirim pesan:", e.message);
+        console.error("[API] Gagal kirim pesan:", e.message);
         res.status(500).json({ status: false, error: e.toString() });
     }
 });
 
-app.listen(3000, () => console.log("📡 Server Running"));
+// --- START SERVER ---
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`📡 WhatsApp API Gateway running on port ${PORT}`);
+});
