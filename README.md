@@ -1,209 +1,126 @@
-# WhatsApp Web.js API
+# WhatsApp Gateway API - POSV2
 
-Integrasi WhatsApp dengan Node.js + Express + WhatsApp Web.js\
-**Copyright © Muhammad Royyan Zamzami**
+> Integrasi WhatsApp dengan Node.js + Express + WhatsApp Web.js.
+> Sistem ini mendukung notifikasi otomatis untuk ekosistem **JEZ Store**.
 
-------------------------------------------------------------------------
+**Copyright © 2026 Muhammad Royyan Zamzami**
 
-## Deskripsi Project
+---
 
-Project ini adalah backend sederhana berbasis **Node.js + Express** yang
-menggunakan **whatsapp-web.js** untuk menghubungkan aplikasi web Anda
-dengan WhatsApp Web.
+## 🚀 Fitur Utama
 
-Fitur utama:
+- **Auto-Scan QR** — Generate QR Code via API dalam format Base64.
+- **Auto-Responder** — Cek poin pelanggan otomatis via database `jez_erp`.
+- **Anti-Crash** — Penanganan error `Execution Context Destroyed` saat navigasi.
+- **Persistence** — Sesi tersimpan otomatis menggunakan `LocalAuth`.
 
--   Generate QR untuk login WhatsApp\
--   Cek status koneksi WhatsApp\
--   Mendapatkan informasi profil WhatsApp (nama & nomor)\
--   Logout / reset session WhatsApp\
--   API berjalan lokal agar dapat diakses aplikasi Laravel
+---
 
-------------------------------------------------------------------------
+## ⚙️ Instalasi
 
-## Instalasi
-
-Clone repository:
-
-``` bash
+**1. Clone Repository:**
+```bash
 git clone https://github.com/muhammadroyyan11/wa-api-wwebjs.git
 cd wa-api-wwebjs
 ```
 
-Install dependencies:
-
-``` bash
+**2. Install Dependencies:**
+```bash
 npm install
 ```
 
-Library utama yang digunakan:
-
-``` bash
-npm install whatsapp-web.js qrcode-terminal express cors
-```
-
-Generate QR berbentuk gambar PNG:
-
-``` bash
-npm install qrcode
-npm install qrcode-terminal
-```
-
-Install MSQL Connector:
-
-``` bash
-npm install mysql2   
-```
-
-Jalankan server:
-
-``` bash
+**3. Jalankan Server:**
+```bash
 node app.js
 ```
 
-Server berjalan di:
+Server berjalan di: `http://localhost:3000`
 
-    http://localhost:3000
+---
 
-------------------------------------------------------------------------
+## 🔌 Dokumentasi API & Cara Hit
 
-## API Endpoint Lengkap + Contoh Penggunaan
+### 🔹 1. Mendapatkan QR Code
 
-Berikut daftar endpoint yang tersedia BESERTA contoh request & response.
+Digunakan untuk proses login awal. Jika perangkat sudah terkoneksi, API akan memberitahu bahwa perangkat sudah siap.
 
-------------------------------------------------------------------------
+- **URL:** `http://localhost:3000/get-qr`
+- **Method:** `GET`
 
-### 🔹 1. GET /get-qr
+**Cara Hit (JavaScript/Fetch):**
+```javascript
+// Contoh di React/Web Frontend
+const loadQR = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/get-qr');
+    const data = await response.json();
 
-Mengambil QR Code login WhatsApp dalam bentuk Base64 PNG.
+    if (data.status) {
+      // data.qr berisi string Base64 image
+      document.getElementById('qr-container').src = data.qr;
+    } else {
+      console.log("Status:", data.message); // "Connected"
+    }
+  } catch (err) {
+    console.error("Gagal mengambil QR:", err);
+  }
+};
+```
 
-**Contoh Request**\
-GET http://localhost:3000/get-qr
+---
 
-**Contoh Response**
+### 🔹 2. Mengirim Pesan WhatsApp
 
-``` json
+Endpoint untuk mengirim notifikasi manual atau pesan sistem.
+
+- **URL:** `http://localhost:3000/send-message`
+- **Method:** `POST`
+
+**Body (JSON):**
+```json
 {
-  "status": true,
-  "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+  "phone": "08123456789",
+  "message": "Halo! Pesanan Anda di JEZ Store sudah siap."
 }
 ```
 
-Jika sudah login:
+---
 
-``` json
-{
-  "status": false,
-  "message": "Device already connected."
-}
-```
+### 🔹 3. Cek Status Koneksi
 
-------------------------------------------------------------------------
+Mengecek apakah sesi WhatsApp masih aktif.
 
-### 2. GET /wa-status
+- **URL:** `http://localhost:3000/wa-status`
+- **Method:** `GET`
 
-Cek apakah perangkat WA sudah terkoneksi.
-
-**Contoh Request**\
-GET http://localhost:3000/wa-status
-
-**Contoh Response**
-
-``` json
+**Response:**
+```json
 {
   "ready": true
 }
 ```
 
-Jika belum:
+---
 
-``` json
-{
-  "ready": false
-}
-```
+## 🤖 Logika Bot (Auto-Response)
 
-------------------------------------------------------------------------
+Bot memiliki fitur otomatis **tanpa perlu di-hit API** untuk fungsi berikut:
 
-### 3. GET /wa-profile
+| Input    | Hasil                                              |
+|----------|----------------------------------------------------|
+| `Menu`   | Menampilkan Menu Utama                             |
+| `1`      | Masuk ke mode `WAITING_PHONE` (Cek Poin)           |
+| Nomor HP | Menampilkan Nama & Poin dari DB `jez_erp`          |
+| `2`      | Memberikan link CS WhatsApp                        |
 
-Mengambil nama & nomor WhatsApp yang sudah login.
+---
 
-**Contoh Request**\
-GET http://localhost:3000/wa-profile
+## 🛠 Maintenance
 
-**Contoh Response**
+- **Commit Format:** `[POSV2] - <keterangan>`
+- **Clear Session:** Jika terjadi kendala login, hapus folder `.wwebjs_auth` dan restart server.
 
-``` json
-{
-  "status": true,
-  "name": "Muhammad Royyan",
-  "number": "628123456789"
-}
-```
-
-Jika belum login:
-
-``` json
-{
-  "status": false,
-  "message": "WhatsApp belum terkoneksi",
-  "name": null,
-  "number": null
-}
-```
-
-------------------------------------------------------------------------
-
-### 4. POST /send-message
-
-Mengirim pesan WhatsApp ke nomor tertentu.
-
-**Contoh Request**\
-POST http://localhost:3000/send-message\
-Content-Type: application/json
-
-**Body:**
-
-``` json
-{
-  "phone": "6281234567890",
-  "message": "Hello ini pesan dari API!"
-}
-```
-
-**Contoh Response**
-
-``` json
-{
-  "status": true,
-  "message": "Pesan berhasil dikirim!"
-}
-```
-
-Jika gagal:
-
-``` json
-{
-  "status": false,
-  "error": "Nomor tidak ditemukan"
-}
-```
-
-------------------------------------------------------------------------
-
-### 5. GET /logout
-
-Reset sesi WhatsApp & generate QR baru.
-
-**Contoh Request**\
-GET http://localhost:3000/logout
-
-**Contoh Response**
-
-``` json
-{
-  "status": true,
-  "message": "Berhasil logout"
-}
+```bash
+rm -rf .wwebjs_auth
+node app.js
 ```
