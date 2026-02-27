@@ -32,32 +32,32 @@ process.on('unhandledRejection', (reason) => {
 });
 
 // --- FUNCTION: SEND MENU ---
-const sendMenu = async (msg) => {
-    const from = msg.from;
-    const now = Date.now();
+// const sendMenu = async (msg) => {
+//     const from = msg.from;
+//     const now = Date.now();
     
-    // Cooldown 1 menit agar tidak spam menu otomatis
-    if (lastMenuSent[from] && (now - lastMenuSent[from] < 60000) && !['menu','help'].includes(msg.body.toLowerCase())) {
-        return; 
-    }
+//     // Cooldown 1 menit agar tidak spam menu otomatis
+//     if (lastMenuSent[from] && (now - lastMenuSent[from] < 60000) && !['menu','help'].includes(msg.body.toLowerCase())) {
+//         return; 
+//     }
 
-    const menuText = `*📌 MENU UTAMA JEZ STORE*
+//     const menuText = `*📌 MENU UTAMA JEZ STORE*
 
-1️⃣ *Cek Poin*
-2️⃣ *Hubungi Customer Service*
-3️⃣ *Informasi Toko*
+// 1️⃣ *Cek Poin*
+// 2️⃣ *Hubungi Customer Service*
+// 3️⃣ *Informasi Toko*
 
-_Ketik angka (1, 2, atau 3) untuk memilih._
-_Ketik *Menu* kapan saja untuk kembali ke sini._`;
+// _Ketik angka (1, 2, atau 3) untuk memilih._
+// _Ketik *Menu* kapan saja untuk kembali ke sini._`;
 
-    try {
-        await client.sendMessage(from, menuText);
-        lastMenuSent[from] = now;
-        userState[from] = "IDLE";
-    } catch (e) {
-        console.error("Error sending menu:", e.message);
-    }
-};
+//     try {
+//         await client.sendMessage(from, menuText);
+//         lastMenuSent[from] = now;
+//         userState[from] = "IDLE";
+//     } catch (e) {
+//         console.error("Error sending menu:", e.message);
+//     }
+// };
 
 // --- WHATSAPP CLIENT INIT ---
 const client = new Client({
@@ -104,67 +104,67 @@ client.on('auth_failure', (msg) => {
 });
 
 // --- MESSAGE LOGIC (AUTO RESPONDER) ---
-client.on('message', async (msg) => {
-    if (msg.from.endsWith("@g.us") || msg.fromMe) return;
+// client.on('message', async (msg) => {
+//     if (msg.from.endsWith("@g.us") || msg.fromMe) return;
 
-    try {
-        const from = msg.from;
-        const text = msg.body.trim();
-        const lowerText = text.toLowerCase();
+//     try {
+//         const from = msg.from;
+//         const text = msg.body.trim();
+//         const lowerText = text.toLowerCase();
         
-        if (!userState[from]) userState[from] = "IDLE";
+//         if (!userState[from]) userState[from] = "IDLE";
 
-        // 1. Logic Cek Poin (Waiting Phone)
-        if (userState[from] === "WAITING_PHONE") {
-            if (lowerText === 'batal' || lowerText === 'menu') {
-                userState[from] = "IDLE";
-                return await msg.reply("Permintaan dibatalkan.");
-            }
+//         // 1. Logic Cek Poin (Waiting Phone)
+//         if (userState[from] === "WAITING_PHONE") {
+//             if (lowerText === 'batal' || lowerText === 'menu') {
+//                 userState[from] = "IDLE";
+//                 return await msg.reply("Permintaan dibatalkan.");
+//             }
 
-            let phone = text.replace(/\D/g, "");
-            if (phone.startsWith("62")) phone = "0" + phone.substring(2);
+//             let phone = text.replace(/\D/g, "");
+//             if (phone.startsWith("62")) phone = "0" + phone.substring(2);
 
-            if (phone.length < 9) {
-                return await msg.reply("Nomor tidak valid. Masukkan nomor HP (atau ketik *Batal*):");
-            }
+//             if (phone.length < 9) {
+//                 return await msg.reply("Nomor tidak valid. Masukkan nomor HP (atau ketik *Batal*):");
+//             }
 
-            const [rows] = await db.query("SELECT cust_name, cust_point FROM ts_customers WHERE cust_phone = ? LIMIT 1", [phone]);
-            userState[from] = "IDLE";
+//             const [rows] = await db.query("SELECT cust_name, cust_point FROM ts_customers WHERE cust_phone = ? LIMIT 1", [phone]);
+//             userState[from] = "IDLE";
             
-            if (rows.length === 0) {
-                return await msg.reply("Nomor tidak ditemukan. Ketik *1* untuk coba lagi atau *Menu* untuk kembali.");
-            }
+//             if (rows.length === 0) {
+//                 return await msg.reply("Nomor tidak ditemukan. Ketik *1* untuk coba lagi atau *Menu* untuk kembali.");
+//             }
             
-            const cust = rows[0];
-            return await msg.reply(`*Cek Poin*\n\nNama: ${cust.cust_name}\nPoin: *${cust.cust_point ?? 0}*`);
-        }
+//             const cust = rows[0];
+//             return await msg.reply(`*Cek Poin*\n\nNama: ${cust.cust_name}\nPoin: *${cust.cust_point ?? 0}*`);
+//         }
 
-        // 2. Logic Pilihan Menu
-        if (text === "1") {
-            userState[from] = "WAITING_PHONE";
-            return await msg.reply("📞 Silakan masukkan nomor HP Anda:");
-        } 
+//         // 2. Logic Pilihan Menu
+//         if (text === "1") {
+//             userState[from] = "WAITING_PHONE";
+//             return await msg.reply("📞 Silakan masukkan nomor HP Anda:");
+//         } 
         
-        if (text === "2") {
-            return await msg.reply("👨‍💼 Hubungi CS: wa.me/628123456789");
-        } 
+//         if (text === "2") {
+//             return await msg.reply("👨‍💼 Hubungi CS: wa.me/628123456789");
+//         } 
         
-        if (text === "3") {
-            return await msg.reply("🏬 *JEZ Store*\nBuka: 09:00 - 21:00\nLokasi: Cabang Terdekat Anda.");
-        }
+//         if (text === "3") {
+//             return await msg.reply("🏬 *JEZ Store*\nBuka: 09:00 - 21:00\nLokasi: Cabang Terdekat Anda.");
+//         }
 
-        // 3. Logic Trigger Menu
-        const triggers = ['menu', 'help', 'halo', 'hi', 'start', 'p'];
-        if (triggers.includes(lowerText)) {
-            return await sendMenu(msg);
-        }
+//         // 3. Logic Trigger Menu
+//         // const triggers = ['menu', 'help', 'halo', 'hi', 'start', 'p'];
+//         // if (triggers.includes(lowerText)) {
+//         //     return await sendMenu(msg);
+//         // }
 
-    } catch (error) {
-        if (!error.message.includes('Execution context')) {
-            console.error("Error in message handler:", error);
-        }
-    }
-});
+//     } catch (error) {
+//         if (!error.message.includes('Execution context')) {
+//             console.error("Error in message handler:", error);
+//         }
+//     }
+// });
 
 client.initialize();
 
