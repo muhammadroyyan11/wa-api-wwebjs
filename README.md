@@ -46,6 +46,7 @@ Generate QR berbentuk gambar PNG:
 
 ``` bash
 npm install qrcode
+npm install qrcode-terminal
 ```
 
 Install MSQL Connector:
@@ -57,7 +58,7 @@ npm install mysql2
 Jalankan server:
 
 ``` bash
-node index.js
+node app.js
 ```
 
 Server berjalan di:
