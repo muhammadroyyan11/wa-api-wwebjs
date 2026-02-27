@@ -1,3 +1,2 @@
-2026/02/27-13:44:09.262 14bae Reusing MANIFEST /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/shared_proto_db/metadata/MANIFEST-000001
-2026/02/27-13:44:09.263 14bae Recovering log #3
-2026/02/27-13:44:09.263 14bae Reusing old log /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/shared_proto_db/metadata/000003.log 
+2026/02/27-13:55:55.185 17f52 Creating DB /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/shared_proto_db/metadata since it was missing.
+2026/02/27-13:55:55.197 17f52 Reusing MANIFEST /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/shared_proto_db/metadata/MANIFEST-000001

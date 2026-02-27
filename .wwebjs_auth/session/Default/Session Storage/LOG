@@ -1,3 +1,2 @@
-2026/02/27-13:44:09.610 14bcb Reusing MANIFEST /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000001
-2026/02/27-13:44:09.612 14bcb Recovering log #3
-2026/02/27-13:44:09.615 14bcb Reusing old log /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Session Storage/000003.log 
+2026/02/27-13:55:55.187 17f5d Creating DB /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Session Storage since it was missing.
+2026/02/27-13:55:55.197 17f5d Reusing MANIFEST /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000001

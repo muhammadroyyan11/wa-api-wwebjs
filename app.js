@@ -83,6 +83,8 @@ client.on("ready", () => {
     console.log("WhatsApp Ready!");
 });
 
+
+
 // --- LOGIKA PESAN (FIXED) ---
 client.on('message', async (msg) => {
     if (msg.from.endsWith("@g.us") || msg.fromMe) return;
@@ -137,9 +139,9 @@ client.on('message', async (msg) => {
         // 3. LOGIKA PEMICU MENU
         const triggers = ['menu', 'help', 'halo', 'hi', 'start', 'p'];
         if (triggers.includes(lowerText)) {
-            return await sendMenu(msg);
+            return await Menu(msg);
         }
-
+send
         // 4. JIKA CHAT RANDOM (Kaya "a", "l", "m")
         // JANGAN panggil sendMenu(msg) secara otomatis di sini agar tidak spam.
         // Kita diamkan saja atau beri tahu cara panggil menu.
@@ -160,6 +162,33 @@ app.get("/get-qr", async (req, res) => {
     if (!latestQR) return res.json({ status: false, message: "Wait QR..." });
     const qrImage = await qrcode.toDataURL(latestQR);
     res.json({ status: true, qr: qrImage });
+});
+
+app.post("/send-message", async (req, res) => {
+    const { phone, message } = req.body;
+
+    if (!waReady) {
+        return res.status(503).json({ status: false, error: "WhatsApp is Offline" });
+    }
+
+    try {
+        let number = phone.replace(/\D/g, "");
+
+        if (number.startsWith("0")) {
+            number = "62" + number.substring(1);
+        }
+
+        const chatId = number + "@c.us";
+
+        await client.sendMessage(chatId, message);
+
+        console.log(`Pesan terkirim ke: ${chatId}`);
+        res.json({ status: true, message: "Pesan berhasil dikirim!" });
+
+    } catch (e) {
+        console.error("Gagal kirim pesan:", e.message);
+        res.status(500).json({ status: false, error: e.toString() });
+    }
 });
 
 app.listen(3000, () => console.log("📡 Server Running"));

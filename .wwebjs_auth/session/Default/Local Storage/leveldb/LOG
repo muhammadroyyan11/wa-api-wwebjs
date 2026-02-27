@@ -1,3 +1,2 @@
-2026/02/27-13:44:09.213 14bcb Reusing MANIFEST /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
-2026/02/27-13:44:09.218 14bcb Recovering log #3
-2026/02/27-13:44:09.218 14bcb Reusing old log /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Local Storage/leveldb/000003.log 
+2026/02/27-13:55:55.177 17f5b Creating DB /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Local Storage/leveldb since it was missing.
+2026/02/27-13:55:55.195 17f5b Reusing MANIFEST /home/royyan/wa-api-wwebjs/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
